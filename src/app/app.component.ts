@@ -1,5 +1,5 @@
 import { Component } from "@angular/core";
-import { init, errorCodes } from "../assets/anyline.js";
+import { init, errorCodes } from "../assets/anylinejs/anyline.js";
 
 @Component({
   selector: "app-root",
