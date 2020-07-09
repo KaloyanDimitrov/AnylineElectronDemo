@@ -1,4 +1,4 @@
-import { Component } from "@angular/core";
+import { Component, AfterViewChecked, ChangeDetectionStrategy, NgZone } from "@angular/core";
 import { init, errorCodes } from "../assets/anylinejs/anyline.js";
 
 @Component({
@@ -6,12 +6,32 @@ import { init, errorCodes } from "../assets/anylinejs/anyline.js";
   templateUrl: "./app.component.html",
   styleUrls: ["./app.component.scss"],
 })
-export class AppComponent {
+export class AppComponent implements AfterViewChecked {
   anylicense =
     "ewogICJsaWNlbnNlS2V5VmVyc2lvbiI6IDIsCiAgImRlYnVnUmVwb3J0aW5nIjogIm9wdC1vdXQiLAogICJpbWFnZVJlcG9ydENhY2hpbmciOiB0cnVlLAogICJtYWpvclZlcnNpb24iOiAiNCIsCiAgIm1heERheXNOb3RSZXBvcnRlZCI6IDAsCiAgInBpbmdSZXBvcnRpbmciOiB0cnVlLAogICJwbGF0Zm9ybSI6IFsKICAgICJKUyIKICBdLAogICJzY29wZSI6IFsKICAgICJBTEwiCiAgXSwKICAic2hvd1BvcFVwQWZ0ZXJFeHBpcnkiOiB0cnVlLAogICJzaG93V2F0ZXJtYXJrIjogdHJ1ZSwKICAidG9sZXJhbmNlRGF5cyI6IDUsCiAgInZhbGlkIjogIjIwMjAtMDktMzAiLAogICJqc0lkZW50aWZpZXIiOiBbCiAgICAiZXUubmV4bW8ucHdhIgogIF0KfQpEVVN1VDhjN2k3cFVsOStnc0k1LzdsckpMVnR1aEVSL1pPdnByRUM0SVp3cE9KVFB6Y1dYWHNyWnhpWGx3ZWxyWHloMW5CNU9iYmVUd3JaazYwZks5bDhQeHdoRW5BQi9rdXc3aHRLckR1NWJGYWtxT09jZFByeHlaaWNDeWkzQzdMR0dpblZ1Tk45cnZQYjBaUks4N3llTHJkUXVyYjR0ZWdEUGZJL0o4Vkl4TWRaWEU0N3diRGRSTUx1RzVtRE53T1VQTk95dTJWczQvMm02b1Z0NmFNWGxIbWU0QWVnYXpzbDdkVEttdTNGTlBqUEQ0Sk5Dcng1UDRteVRSckt4eGZ1Vy9tWVM4dmttRVZRQ0ZIY3hPcnJnUnR3czI3V2t3R21zNStJUFhENzFGTzZqVzk5L1ZKMUpSdklzUThTWTVvKzRBMVVENGxpdlhVUm9vNWJEckE9PQ==";
 
   anyline;
-  constructor() {}
+  constructor(
+    private zone: NgZone
+
+  ) {}
+
+  ngAfterViewChecked() {
+    // console.log('ChangeDetectionCycle is ran');
+  }
+
+/*   startScanOutsideZone() {   //even if the scanning is run outside of ngZone and no changeDetection cycles are run there is still some process going on in the background
+    this.zone.runOutsideAngular(() =>
+    this.startScan()
+    );
+  } */
+
+  stop() {
+    this.anyline.stopScanning();
+    this.anyline.dispose();
+    this.anyline = null;
+    document.getElementById("anylineContainer").remove();
+  }
 
   startScan() {
     const viewConfig = {
@@ -61,6 +81,7 @@ export class AppComponent {
 
     this.anyline.onResult = ({ image, fullImage, result }) => {
       console.log("result: ", result);
+
     };
 
     this.anyline.onReport = (report) => {
