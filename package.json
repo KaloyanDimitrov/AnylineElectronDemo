@@ -14,8 +14,8 @@
     "e2e": "ng e2e",
     "build-windows": "rimraf release && ng build --prod --base-href . & electron-builder",
     "windows": "electron-builder",
-    "dev-windows": "ng build --prod --optimization=false --watch --base-href .",
-    "electron-dev": "electron ."
+    "dev-windows": "ng build --optimization=false --watch --base-href .",
+    "dev-electron": "electron ."
   },
   "build": {
     "appId": "eu.nexmo.pwa",
